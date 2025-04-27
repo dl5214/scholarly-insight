@@ -2,22 +2,14 @@
 import * as admin from 'firebase-admin';
 
 if (!admin.apps.length) {
-    // In production you'd rely on GOOGLE_APPLICATION_CREDENTIALS
-    // but for dev we just pass the projectId so Admin SDK knows which project.
-    admin.initializeApp({
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    });
-    console.log('[firebaseAdmin] Initialized Admin SDK with projectId:', process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID);
+    const projectId = process.env.FIREBASE_PROJECT_ID!;
+    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL!;
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, '\n');
 
-    // If you have FIREBASE_AUTH_EMULATOR_HOST set (e.g. "localhost:9099"),
-    // Admin SDK will route auth calls to it automatically.
-    if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
-        console.log('[firebaseAdmin] Auth emulator host:', process.env.FIREBASE_AUTH_EMULATOR_HOST);
-    }
-    // Likewise for Firestore emulator:
-    if (process.env.FIRESTORE_EMULATOR_HOST) {
-        console.log('[firebaseAdmin] Firestore emulator host:', process.env.FIRESTORE_EMULATOR_HOST);
-    }
+    admin.initializeApp({
+        credential: admin.credential.cert({ projectId, clientEmail, privateKey }),
+        projectId,
+    });
 }
 
 export default admin;
