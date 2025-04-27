@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "scholarly-insight-8cc6d"
+  },
+  "targets": {
+    "scholarly-insight-8cc6d": {
+      "hosting": {
+        "production": [
+          "scholarly-insight-8cc6d"
+        ],
+        "staging": [
+          "scholarly-insight-8cc6d-staging"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
