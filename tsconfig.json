@@ -29,13 +29,16 @@
     "isolatedModules": true
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     "next-env.d.ts",
     "secrets/**/*.json",
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "functions",
+    ".next",
+    "public"
   ]
 }
