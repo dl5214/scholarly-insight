@@ -2,19 +2,25 @@
 import * as admin from 'firebase-admin';
 
 if (!admin.apps.length) {
-    if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-        // local: let the SDK pick up the JSON file
-        admin.initializeApp();
+    let credential;
+
+    // In production (e.g. Vercel), use the Base64-encoded service account
+    if (process.env.FIREBASE_SERVICE_ACCOUNT_BASE64) {
+        const json = Buffer
+            .from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64!, 'base64')
+            .toString('utf8');
+        const serviceAccount = JSON.parse(json);
+        credential = admin.credential.cert(serviceAccount);
     } else {
-        // production: use explicit env vars
-        admin.initializeApp({
-            credential: admin.credential.cert({
-                projectId:   process.env.FIREBASE_PROJECT_ID!,
-                clientEmail: process.env.FIREBASE_CLIENT_EMAIL!,
-                privateKey:  process.env.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, '\n'),
-            }),
-        });
+        // In local development, fall back to Application Default Credentials
+        credential = admin.credential.applicationDefault();
     }
+
+    // Initialize the Admin SDK with the chosen credentials
+    admin.initializeApp({
+        credential,
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    });
 }
 
 export default admin;
